@@ -22,10 +22,20 @@ public class Order {
 
     private String status;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount; // Phải là BigDecimal, không dùng Double
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    private String phone;
+    private String address;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

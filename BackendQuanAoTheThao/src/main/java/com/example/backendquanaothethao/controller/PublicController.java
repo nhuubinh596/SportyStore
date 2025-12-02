@@ -10,6 +10,9 @@ import com.example.backendquanaothethao.repository.OrderRepository;
 import com.example.backendquanaothethao.repository.ProductRepository;
 import com.example.backendquanaothethao.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +35,33 @@ public class PublicController {
     @Autowired
     private OrderRepository orderRepository;
 
-    // Lấy danh sách sản phẩm hiển thị ra trang chủ (Mới nhất lên đầu)
+    // API lấy danh sách sản phẩm (Có Phân trang + Tìm kiếm + Sắp xếp)
     @GetMapping("/products")
-    public List<Product> getProducts() {
-        return productRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    public Page<Product> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "newest") String sort // <--- Tham số quyết định sắp xếp
+    ) {
+        // 1. Mặc định: Sắp xếp theo ID giảm dần (Mới nhất lên đầu)
+        Sort sorting = Sort.by(Sort.Direction.DESC, "id");
+
+        // 2. Kiểm tra tham số gửi lên để đổi kiểu sắp xếp
+        if ("price_asc".equals(sort)) {
+            sorting = Sort.by(Sort.Direction.ASC, "price"); // Giá tăng dần
+        } else if ("price_desc".equals(sort)) {
+            sorting = Sort.by(Sort.Direction.DESC, "price"); // Giá giảm dần
+        }
+
+        // 3. Tạo trang dữ liệu với cấu hình sắp xếp đã chọn
+        Pageable pageable = PageRequest.of(page, size, sorting);
+
+        // 4. Gọi Database
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return productRepo.findAll(pageable);
+        } else {
+            return productRepo.findByNameContainingIgnoreCase(keyword, pageable);
+        }
     }
 
     @GetMapping("/products/{id}")
@@ -46,10 +72,15 @@ public class PublicController {
     @PostMapping("/orders")
     public ResponseEntity<?> createOrder(@RequestBody OrderRequest req) {
         try {
-            // 1. Tạo đơn hàng
             Order order = new Order();
             order.setCreatedAt(LocalDateTime.now());
-            order.setStatus("PENDING"); // Mặc định là Chờ xử lý
+            order.setStatus("PENDING");
+
+            // --- THÊM ĐOẠN NÀY ĐỂ LƯU THÔNG TIN GIAO HÀNG ---
+            order.setFullName(req.getFullName());
+            order.setPhone(req.getPhone());
+            order.setAddress(req.getAddress());
+            order.setPaymentMethod("COD");
 
             // Gán User nếu có
             if (req.getUsername() != null) {
@@ -89,6 +120,11 @@ public class PublicController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("message", "Lỗi đặt hàng: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("/orders")
+    public List<Order> getMyOrders(@RequestParam("username") String username) {
+        return orderRepository.findByUser_UsernameOrderByCreatedAtAsc(username);
     }
     // Tìm kiếm sản phẩm (Làm sau nếu cần)
 }

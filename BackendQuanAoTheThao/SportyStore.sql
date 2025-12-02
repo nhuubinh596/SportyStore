@@ -1,196 +1,188 @@
 CREATE DATABASE sportystore COLLATE Vietnamese_CI_AS;
 GO
+
 USE sportystore;
 GO
 
-CREATE TABLE role (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  name NVARCHAR(50) NOT NULL UNIQUE
-);
+-- =============================================
+-- 1. XÓA B?NG C? (Theo th? t? Con tr??c -> Cha sau)
+-- =============================================
+-- Dùng l?nh DROP IF EXISTS (??n gi?n, không báo l?i n?u b?ng ch?a có)
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS wishlist;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS voucher;
+DROP TABLE IF EXISTS user_role;
+DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS user_account;
+DROP TABLE IF EXISTS address;
 GO
 
+-- =============================================
+-- 2. T?O 10 B?NG C? B?N
+-- =============================================
+
+-- B?NG 1: USER (Tài kho?n)
 CREATE TABLE user_account (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  name NVARCHAR(150) NOT NULL,
-  email NVARCHAR(200) NOT NULL UNIQUE,
-  password NVARCHAR(255) NOT NULL,
-  phone NVARCHAR(50),
-  created_at DATETIME2 DEFAULT SYSUTCDATETIME()
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    username NVARCHAR(100) NOT NULL UNIQUE,
+    password NVARCHAR(255) NOT NULL,
+    full_name NVARCHAR(100),
+    email NVARCHAR(100),
+    phone NVARCHAR(20),
+    created_at DATETIME2 DEFAULT GETDATE()
 );
-GO
 
+-- B?NG 2: ROLE (Quy?n)
+CREATE TABLE role (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(50) NOT NULL UNIQUE
+);
+
+-- B?NG 3: USER_ROLE (B?ng n?i User-Role)
 CREATE TABLE user_role (
-  user_id BIGINT NOT NULL,
-  role_id BIGINT NOT NULL,
-  CONSTRAINT PK_user_role PRIMARY KEY (user_id, role_id),
-  CONSTRAINT FK_userrole_user FOREIGN KEY (user_id) REFERENCES user_account(id),
-  CONSTRAINT FK_userrole_role FOREIGN KEY (role_id) REFERENCES role(id)
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES user_account(id),
+    FOREIGN KEY (role_id) REFERENCES role(id)
 );
-GO
 
+-- B?NG 4: CATEGORY (Danh m?c)
 CREATE TABLE category (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  name NVARCHAR(120) NOT NULL UNIQUE
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL UNIQUE
 );
-GO
 
+-- B?NG 5: PRODUCT (S?n ph?m)
 CREATE TABLE product (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  name NVARCHAR(255) NOT NULL,
-  description NVARCHAR(MAX),
-  price DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  sku NVARCHAR(100),
-  category_id BIGINT NULL,
-  active BIT NOT NULL DEFAULT 1,
-  created_at DATETIME2 DEFAULT SYSUTCDATETIME(),
-  CONSTRAINT FK_product_category FOREIGN KEY (category_id) REFERENCES category(id)
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(255) NOT NULL,
+    price DECIMAL(12,2) NOT NULL DEFAULT 0,
+    sale_price DECIMAL(12,2) NULL,
+    description NVARCHAR(MAX),
+    image_url NVARCHAR(500),
+    category_id BIGINT,
+    created_at DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE SET NULL
 );
-GO
 
-CREATE TABLE product_variant (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  product_id BIGINT NOT NULL,
-  sku NVARCHAR(150),
-  size NVARCHAR(50),
-  color NVARCHAR(80),
-  stock INT NOT NULL DEFAULT 0,
-  price DECIMAL(12,2) NULL,
-  CONSTRAINT FK_variant_product FOREIGN KEY (product_id) REFERENCES product(id)
-);
-GO
-
-CREATE TABLE address (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  full_name NVARCHAR(150),
-  street NVARCHAR(255),
-  city NVARCHAR(100),
-  province NVARCHAR(100),
-  postal_code NVARCHAR(30),
-  phone NVARCHAR(50),
-  is_default BIT DEFAULT 0,
-  CONSTRAINT FK_address_user FOREIGN KEY (user_id) REFERENCES user_account(id)
-);
-GO
-
+-- B?NG 6: ORDERS (??n hàng)
 CREATE TABLE orders (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  status NVARCHAR(50) NOT NULL DEFAULT 'CREATED',
-  total_amount DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  payment_method NVARCHAR(80),
-  shipping_address_id BIGINT NULL,
-  created_at DATETIME2 DEFAULT SYSUTCDATETIME(),
-  CONSTRAINT FK_orders_user FOREIGN KEY (user_id) REFERENCES user_account(id),
-  CONSTRAINT FK_orders_address FOREIGN KEY (shipping_address_id) REFERENCES address(id)
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    user_id BIGINT,
+    status NVARCHAR(50) DEFAULT 'PENDING',
+    total_amount DECIMAL(12,2) DEFAULT 0,
+    full_name NVARCHAR(100),
+    phone NVARCHAR(20),
+    address NVARCHAR(500),
+    payment_method NVARCHAR(50),
+    created_at DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (user_id) REFERENCES user_account(id)
 );
-GO
+
+-- B?NG 8: VOUCHER (Mã gi?m giá)
+CREATE TABLE voucher (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    discount_amount DECIMAL(12,2) NOT NULL,
+    expiration_date DATETIME2
+);
+
+-- B?NG 9: REVIEW (?ánh giá)
+CREATE TABLE review (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    comment NVARCHAR(MAX),
+    created_at DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (user_id) REFERENCES user_account(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
 
 CREATE TABLE order_item (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  order_id BIGINT NOT NULL,
-  product_variant_id BIGINT NOT NULL,
-  qty INT NOT NULL DEFAULT 1,
-  price DECIMAL(12,2) NOT NULL,
-  CONSTRAINT FK_orderitem_order FOREIGN KEY (order_id) REFERENCES orders(id),
-  CONSTRAINT FK_orderitem_variant FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL, -- B?t bu?c tên là product_id
+    qty INT NOT NULL DEFAULT 1,
+    price DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id)
 );
-GO
 
-CREATE TABLE review (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  product_id BIGINT NOT NULL,
-  rating INT NOT NULL,
-  comment NVARCHAR(MAX),
-  created_at DATETIME2 DEFAULT SYSUTCDATETIME(),
-  CONSTRAINT FK_review_user FOREIGN KEY (user_id) REFERENCES user_account(id),
-  CONSTRAINT FK_review_product FOREIGN KEY (product_id) REFERENCES product(id),
-  CONSTRAINT CHK_review_rating CHECK (rating BETWEEN 1 AND 5)
+CREATE TABLE wishlist (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL, -- B?t bu?c tên là product_id
+    created_at DATETIME2 DEFAULT GETDATE(),
+    UNIQUE(user_id, product_id), -- Ch?n trùng l?p (1 ng??i ko like 2 l?n 1 món)
+    FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
-GO
 
-CREATE TABLE product_image (
-  id BIGINT IDENTITY(1,1) PRIMARY KEY,
-  product_id BIGINT NOT NULL,
-  url NVARCHAR(500),
-  is_primary BIT DEFAULT 0,
-  CONSTRAINT FK_image_product FOREIGN KEY (product_id) REFERENCES product(id)
-);
-GO
+-- =============================================
+-- 3. CHÈN D? LI?U (INSERT TH? CÔNG)
+-- =============================================
 
--- Seed
-INSERT INTO role (name) VALUES (N'ROLE_USER'), (N'ROLE_ADMIN');
-GO
+-- ROLE
+INSERT INTO role (name) VALUES ('ROLE_ADMIN'), ('ROLE_USER');
 
-INSERT INTO user_account (name, email, password, phone) VALUES
-(N'Admin Demo', N'admin@example.com', N'admin123', N'0123456789'),
-(N'Nguyen Khach', N'khach1@example.com', N'pass123', N'0987654321'),
-(N'Le Customer', N'khach2@example.com', N'pass123', N'0911222333');
-GO
+-- USER (Pass: 123)
+INSERT INTO user_account (username, password, full_name, email, phone) VALUES 
+('admin', '123', N'Qu?n Tr? Viên', 'admin@sporty.com', '0909111222'),
+('user1', '123', N'Nguy?n V?n A', 'user1@gmail.com', '0912333444'),
+('user2', '123', N'Tr?n Th? B', 'user2@gmail.com', '0912555666');
 
-INSERT INTO user_role (user_id, role_id) VALUES
-(1, 2), (1, 1), (2, 1), (3, 1);
-GO
+-- USER_ROLE
+INSERT INTO user_role (user_id, role_id) VALUES (1, 1), (1, 2), (2, 2), (3, 2);
 
-INSERT INTO category (name) VALUES
-(N'Áo thun'), (N'Qu?n short'), (N'Giày th? thao'), (N'Ph? ki?n');
-GO
+-- CATEGORY
+INSERT INTO category (name) VALUES 
+(N'Áo thun'), (N'Qu?n short'), (N'Giày th? thao'), (N'Ph? ki?n'), (N'?? t?p Gym');
 
-INSERT INTO product (name, description, price, sku, category_id, active) VALUES
-(N'Áo thun th? thao DryFit - Xanh', N'Áo thun ch?t li?u DryFit.', 299000, N'AT-DRY-001', 1, 1),
-(N'Qu?n short nam - ?en', N'Qu?n short co giãn.', 199000, N'QS-BLK-001', 2, 1),
-(N'Giày ch?y b? Lightning', N'Giày ch?y nh?.', 1290000, N'SH-LIGHT-001', 3, 1),
-(N'M? l??i trai th? thao', N'M? th? thao.', 150000, N'ACC-HAT-001', 4, 1),
-(N'Áo thun th? thao DryFit - ??', N'Phiên b?n màu ??.', 299000, N'AT-DRY-002', 1, 1);
-GO
+-- PRODUCT (Kho?ng 15 s?n ph?m m?u ??i di?n)
+INSERT INTO product (name, price, sale_price, category_id, image_url, description) VALUES
+(N'Áo Thun DryFit Cool', 299000, 250000, 1, 'https://placehold.co/300x300?text=Ao+Thun', N'Thoáng mát.'),
+(N'Áo Polo Th? Thao', 450000, NULL, 1, 'https://placehold.co/300x300?text=Polo', N'L?ch s?.'),
+(N'Áo Tanktop Gym', 150000, 120000, 1, 'https://placehold.co/300x300?text=Tanktop', N'Khoe c? b?p.'),
+(N'Qu?n Short 2 L?p', 220000, NULL, 2, 'https://placehold.co/300x300?text=Short', N'Có l?p lót.'),
+(N'Qu?n Jogger Thun', 320000, 280000, 2, 'https://placehold.co/300x300?text=Jogger', N'N?ng ??ng.'),
+(N'Giày Nike Pegasus', 3500000, 2990000, 3, 'https://placehold.co/300x300?text=Nike', N'Ch?y b?.'),
+(N'Giày Adidas Ultra', 4200000, NULL, 3, 'https://placehold.co/300x300?text=Das', N'Êm ái.'),
+(N'Giày Bitis Hunter', 890000, 790000, 3, 'https://placehold.co/300x300?text=Bitis', N'Hàng Vi?t.'),
+(N'Bình N??c 1L', 90000, NULL, 4, 'https://placehold.co/300x300?text=Binh', N'Nh?a an toàn.'),
+(N'G?ng Tay Th? Môn', 300000, NULL, 4, 'https://placehold.co/300x300?text=Gang', N'B?t dính.'),
+(N'Túi Tr?ng Gym', 350000, 299000, 4, 'https://placehold.co/300x300?text=Tui', N'??ng ??.'),
+(N'Th?m Yoga', 199000, NULL, 5, 'https://placehold.co/300x300?text=Tham', N'Ch?ng tr??t.'),
+(N'Dây Nh?y', 120000, NULL, 5, 'https://placehold.co/300x300?text=Day', N'T?c ?? cao.'),
+(N'?ai L?ng C?ng', 450000, 400000, 5, 'https://placehold.co/300x300?text=Dai', N'H? tr? l?ng.'),
+(N'Áo Khoác Gió', 550000, NULL, 1, 'https://placehold.co/300x300?text=Khoac', N'Ch?ng n??c.');
 
-INSERT INTO product_variant (product_id, sku, size, color, stock, price) VALUES
-(1, N'AT-DRY-001-S-BL', N'S', N'Xanh', 20, 299000),
-(1, N'AT-DRY-001-M-BL', N'M', N'Xanh', 35, 299000),
-(5, N'AT-DRY-002-M-RED', N'M', N'??', 15, 299000),
-(2, N'QS-BLK-001-M', N'M', N'?en', 40, 199000),
-(3, N'SH-LIGHT-001-42', N'42', N'Tr?ng', 10, 1290000),
-(4, N'ACC-HAT-001-ONE', N'ONE', N'?en', 50, 150000);
-GO
+-- ORDERS
+INSERT INTO orders (user_id, status, total_amount, full_name, phone, address, payment_method, created_at) VALUES
+(2, 'PENDING', 299000, N'Nguy?n V?n A', '0912333444', N'Hà N?i', 'COD', GETDATE()),
+(3, 'COMPLETED', 3500000, N'Tr?n Th? B', '0912555666', N'?à N?ng', 'BANK', GETDATE());
 
-INSERT INTO orders (user_id, status, total_amount, payment_method, shipping_address_id)
-VALUES (2, N'PAID', 598000, N'COD', NULL);
-GO
+-- ORDER_ITEM
+INSERT INTO order_item (order_id, product_id, qty, price) VALUES
+(1, 1, 1, 299000),
+(2, 6, 1, 3500000);
 
-INSERT INTO order_item (order_id, product_variant_id, qty, price)
-VALUES (1, 1, 2, 299000);
-GO
+-- VOUCHER
+INSERT INTO voucher (code, discount_amount, expiration_date) VALUES 
+('SPORTY50', 50000, '2025-12-31'),
+('VIP', 100000, '2025-12-31');
 
+-- REVIEW
 INSERT INTO review (user_id, product_id, rating, comment) VALUES
-(2, 1, 5, N'Good!'),
-(3, 3, 4, N'Khá ?n.');
-GO
+(2, 1, 5, N'Áo m?c mát l?m!'),
+(3, 6, 4, N'Giày êm nh?ng giao h?i lâu.');
 
-drop database sportystore
+-- WISHLIST
+INSERT INTO wishlist (user_id, product_id) VALUES (2, 6), (2, 7);
 
-SELECT * FROM 
-
-UPDATE user_account
-SET password = '$2a$10$Tc4Xjm7iPZQfg.yCLZ8ONeQAp6LkVRCj9S0KpkCDS8SnOUBKKuIry'
-WHERE username = 'user1';
-
-
-SELECT id, username, password, LEN(password) AS pwd_len
-FROM user_account
-WHERE username = 'user1';
-
-ALTER TABLE product ADD image_url NVARCHAR(500);
-GO
-
--- (Tùy ch?n) C?p nh?t ?nh m?u cho các s?n ph?m c? ?? test cho ??p
-UPDATE product SET image_url = 'https://via.placeholder.com/300' WHERE image_url IS NULL;
-GO
-
-ALTER TABLE product ADD sale_price DECIMAL(10, 2);
-GO
-
-UPDATE product 
-SET image_url = 'https://placehold.co/300x300?text=No+Image'
-WHERE image_url LIKE '%via.placeholder.com%';
 GO

@@ -28,6 +28,7 @@ import ProductDetail from "@/pages/user/ProductDetail.vue";
 import Cart from "@/pages/user/Cart.vue";
 import Checkout from "@/pages/user/Checkout.vue";
 import OrderSuccess from "@/pages/user/OrderSuccess.vue";
+import UserWishlist from '@/pages/user/UserWishlist.vue';
 
 const routes = [
   // --- PUBLIC ROUTES ---
@@ -64,6 +65,7 @@ const routes = [
       { path: "cart", component: Cart },
       { path: "checkout", component: Checkout },
       { path: "success", component: OrderSuccess },
+      { path: "wishlist", component: UserWishlist },
     ],
   },
 

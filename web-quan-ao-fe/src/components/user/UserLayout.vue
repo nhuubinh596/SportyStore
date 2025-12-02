@@ -1,48 +1,53 @@
 <template>
   <div class="user-layout">
-    <header class="user-header">
-      <div class="header-left">
-        <div class="brand">SportyStore</div>
-        <div class="search-box">
-          <input type="text" placeholder="Tìm kiếm quần áo, giày dép..." />
-          <button><i class="bi bi-search"></i> Tìm</button>
-        </div>
-      </div>
-
-      <div class="header-right">
-        <div class="cart-btn">
-          <span>🛒</span>
-          <span class="badge">0</span>
-        </div>
-
-        <div class="user-info">
-          <span class="avatar">👤</span>
-          <span class="username">{{ currentUser?.username || 'Khách' }}</span>
-          <button class="btn-logout" @click="onLogout">Đăng xuất</button>
-        </div>
-      </div>
-    </header>
+    <div class="layout-header-wrapper">
+      <UserHeader />
+    </div>
 
     <div class="body-container">
       <aside class="user-sidebar">
-        <div class="menu-title">Tài khoản của tôi</div>
-        <ul class="menu-list">
-          <li>
-            <router-link to="/user" active-class="active">
-              🏠 Trang chủ
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/user/orders" active-class="active">
-              📦 Đơn mua
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/user/profile" active-class="active">
-              ⚙️ Thông tin cá nhân
-            </router-link>
-          </li>
-        </ul>
+        <div class="menu-group">
+          <div class="menu-title">Mua sắm</div>
+          <ul class="menu-list">
+            <li>
+              <router-link to="/user" active-class="active" exact>
+                🏠 Trang chủ
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/user/cart"
+                active-class="active"
+                class="highlight-item"
+              >
+                🛒 Giỏ hàng
+              </router-link>
+            </li>
+          </ul>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">Tài khoản</div>
+          <ul class="menu-list">
+            <li>
+              <router-link to="/user/orders" active-class="active"
+                >📦 Đơn mua</router-link
+              >
+            </li>
+
+            <li>
+              <router-link to="/user/wishlist" active-class="active"
+                >❤️ Yêu thích</router-link
+              >
+            </li>
+
+            <li>
+              <router-link to="/user/profile" active-class="active"
+                >⚙️ Thông tin cá nhân</router-link
+              >
+            </li>
+          </ul>
+        </div>
       </aside>
 
       <main class="user-content">
@@ -50,32 +55,34 @@
       </main>
     </div>
 
-    <UserFooter></UserFooter>
+    <UserFooter />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import UserFooter from './UserFooter.vue';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import UserHeader from "./UserHeader.vue";
+import UserFooter from "./UserFooter.vue";
 
 const router = useRouter();
 const currentUser = ref(null);
 
 onMounted(() => {
-  const raw = localStorage.getItem('currentUser');
+  const raw = localStorage.getItem("currentUser");
   if (raw) currentUser.value = JSON.parse(raw);
 });
 
 function onLogout() {
-  if(confirm("Bạn muốn đăng xuất?")) {
+  if (confirm("Bạn muốn đăng xuất?")) {
     localStorage.clear();
-    router.push('/login');
+    router.push("/login");
   }
 }
 </script>
 
 <style scoped>
+/* Tổng thể trang */
 .user-layout {
   background-color: #f5f5f5;
   min-height: 100vh;
@@ -83,67 +90,87 @@ function onLogout() {
   flex-direction: column;
 }
 
-/* HEADER */
-.user-header {
-  height: 70px;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px; /* Padding header */
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+/* Header Wrapper để giữ vị trí */
+.layout-header-wrapper {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  width: 100%;
 }
 
-.brand { font-size: 24px; font-weight: bold; color: #ff6b35; margin-right: 40px; cursor: pointer;}
-.header-left { display: flex; align-items: center; flex: 1; }
-.search-box { display: flex; flex: 1; max-width: 600px; }
-.search-box input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; outline: none;}
-.search-box button { padding: 0 20px; background: #ff6b35; color: white; border: none; border-radius: 0 4px 4px 0; cursor: pointer;}
-
-.header-right { display: flex; align-items: center; gap: 20px; }
-.cart-btn { position: relative; cursor: pointer; font-size: 20px;}
-.cart-btn .badge { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px;}
-.user-info { display: flex; align-items: center; gap: 10px; font-size: 14px;}
-.btn-logout { border: none; background: none; color: #888; cursor: pointer; text-decoration: underline;}
-
-/* BODY CONTAINER - ĐÃ SỬA: Bỏ max-width để full màn hình */
+/* Phần thân: Flexbox chia cột */
 .body-container {
   display: flex;
-  width: 100%;        /* Chiếm hết chiều ngang */
-  gap: 20px;          /* Khoảng cách giữa Sidebar và Content */
-  padding: 20px 30px; /* Cách lề trái phải một chút cho đẹp */
+  width: 100%;
+  gap: 20px;
+  padding: 20px 30px;
   box-sizing: border-box;
+  flex: 1; /* Đẩy footer xuống đáy */
+  align-items: flex-start; /* Sidebar không bị giãn chiều cao theo content */
 }
 
-/* SIDEBAR */
+/* Sidebar bên trái */
 .user-sidebar {
-  width: 240px;       /* Cố định chiều rộng sidebar */
-  flex-shrink: 0;     /* Không cho sidebar bị co lại */
+  width: 240px;
+  flex-shrink: 0;
   background: white;
   padding: 20px;
   border-radius: 8px;
-  height: fit-content;
-  position: sticky;   /* Để sidebar trượt theo khi cuộn (tuỳ chọn) */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  position: sticky; /* Trượt theo khi cuộn */
   top: 90px;
 }
-.menu-title { font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;}
-.menu-list { list-style: none; padding: 0; }
-.menu-list li { margin-bottom: 5px; }
-.menu-list a { 
-  display: block; padding: 10px; color: #555; text-decoration: none; border-radius: 6px; transition: 0.2s;
+
+.menu-group {
+  margin-bottom: 20px;
 }
-.menu-list a:hover, .menu-list a.active {
-  background-color: #fff0e6;
-  color: #ff6b35;
-  font-weight: 600;
+.menu-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* MAIN CONTENT */
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.menu-list li {
+  margin-bottom: 5px;
+}
+
+.menu-list a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.menu-list a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Style riêng cho nút đang chọn (Active) */
+.menu-list a.active {
+  background-color: #fff0e6; /* Nền cam nhạt */
+  color: #ff6b35; /* Chữ cam */
+  font-weight: bold;
+}
+
+/* Style riêng cho nút Giỏ hàng để nổi bật */
+.highlight-item {
+  color: #ff6b35 !important;
+}
+
+/* Nội dung chính bên phải */
 .user-content {
-  flex: 1; /* Chiếm toàn bộ phần còn lại */
-  min-width: 0; /* Fix lỗi tràn content flexbox */
+  flex: 1;
+  min-width: 0; /* Fix lỗi tràn layout */
 }
 </style>
