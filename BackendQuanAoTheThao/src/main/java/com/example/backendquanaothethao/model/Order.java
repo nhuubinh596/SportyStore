@@ -1,0 +1,42 @@
+package com.example.backendquanaothethao.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+@Entity
+@Table(name = "orders")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String status;
+
+    private LocalDateTime createdAt;
+
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount; // Phải là BigDecimal, không dùng Double
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserAccount user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<OrderItem> items;
+
+    public String getUserName() {
+        return user != null ? user.getUsername() : "Khách lẻ";
+    }
+
+}
