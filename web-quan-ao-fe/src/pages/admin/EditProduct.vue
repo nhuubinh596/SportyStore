@@ -90,7 +90,7 @@ async function updateProduct() {
   fd.append('name', form.value.name);
   fd.append('price', form.value.price);
   if(form.value.salePrice) fd.append('salePrice', form.value.salePrice);
-  else fd.append('salePrice', 0); // Reset sale nếu xóa trắng
+  else fd.append('salePrice', 0); 
 
   fd.append('categoryId', form.value.categoryId);
   fd.append('description', form.value.description);
@@ -108,7 +108,6 @@ async function updateProduct() {
 </script>
 
 <style scoped>
-/* Style giống AddProduct */
 .add-product-page { display: flex; justify-content: center; padding: 20px; }
 .form-card { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 600px; }
 .input-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 5px; }

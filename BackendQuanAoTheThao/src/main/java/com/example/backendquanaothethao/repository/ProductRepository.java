@@ -6,6 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    // Tìm theo tên (không phân biệt hoa thường) + Phân trang
     Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

@@ -82,7 +82,6 @@ function onLogout() {
 </script>
 
 <style scoped>
-/* Tổng thể trang */
 .user-layout {
   background-color: #f5f5f5;
   min-height: 100vh;
@@ -90,7 +89,6 @@ function onLogout() {
   flex-direction: column;
 }
 
-/* Header Wrapper để giữ vị trí */
 .layout-header-wrapper {
   position: sticky;
   top: 0;
@@ -98,18 +96,16 @@ function onLogout() {
   width: 100%;
 }
 
-/* Phần thân: Flexbox chia cột */
 .body-container {
   display: flex;
   width: 100%;
   gap: 20px;
   padding: 20px 30px;
   box-sizing: border-box;
-  flex: 1; /* Đẩy footer xuống đáy */
-  align-items: flex-start; /* Sidebar không bị giãn chiều cao theo content */
+  flex: 1; 
+  align-items: flex-start; 
 }
 
-/* Sidebar bên trái */
 .user-sidebar {
   width: 240px;
   flex-shrink: 0;
@@ -117,7 +113,7 @@ function onLogout() {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
-  position: sticky; /* Trượt theo khi cuộn */
+  position: sticky; 
   top: 90px;
 }
 
@@ -156,21 +152,18 @@ function onLogout() {
   background-color: #f0f0f0;
 }
 
-/* Style riêng cho nút đang chọn (Active) */
 .menu-list a.active {
-  background-color: #fff0e6; /* Nền cam nhạt */
-  color: #ff6b35; /* Chữ cam */
+  background-color: #fff0e6; 
+  color: #ff6b35;
   font-weight: bold;
 }
 
-/* Style riêng cho nút Giỏ hàng để nổi bật */
 .highlight-item {
   color: #ff6b35 !important;
 }
 
-/* Nội dung chính bên phải */
 .user-content {
   flex: 1;
-  min-width: 0; /* Fix lỗi tràn layout */
+  min-width: 0; 
 }
 </style>

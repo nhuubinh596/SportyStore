@@ -15,12 +15,10 @@ public class Wishlist {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // Ai thích?
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserAccount user;
 
-    // Thích cái gì?
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;

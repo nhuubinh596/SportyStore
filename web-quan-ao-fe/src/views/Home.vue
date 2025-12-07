@@ -38,7 +38,6 @@ onMounted(async () => {
   loading.value = true;
   try {
     const res = await fetchProducts();
-    // adjust to your backend returned shape
     if (res?.success && Array.isArray(res.data)) products.value = res.data;
     else if (Array.isArray(res)) products.value = res;
     else products.value = [
@@ -46,7 +45,6 @@ onMounted(async () => {
       { id:2, name:'Jeans Slim', price:499, stock:5 }
     ];
   } catch (e) {
-    // fallback to demo products
     products.value = [
       { id:1, name:'T-Shirt Basic', price:199, stock:10 },
       { id:2, name:'Jeans Slim', price:499, stock:5 }

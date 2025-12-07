@@ -92,7 +92,6 @@ async function loadDashboard() {
       users: users.length 
     };
     
-    // Lấy 5 đơn mới nhất
     recentOrders.value = orders.slice(0, 5);
 
   } catch (error) {
@@ -105,7 +104,7 @@ onMounted(() => loadDashboard());
 
 <style scoped>
 .dashboard-wrapper {
-  color: #333; /* Quan trọng: Đặt màu chữ chính là đen */
+  color: #333; 
 }
 
 .page-title {
@@ -115,7 +114,6 @@ onMounted(() => loadDashboard());
   color: #111;
 }
 
-/* CARDS */
 .stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -126,7 +124,7 @@ onMounted(() => loadDashboard());
 .stat-card {
   padding: 24px;
   border-radius: 12px;
-  color: white; /* Chữ trong thẻ màu thì để trắng cho nổi */
+  color: white; 
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   text-align: center;
 }
@@ -139,7 +137,6 @@ onMounted(() => loadDashboard());
 .orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
 .red { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
-/* TABLE SECTION */
 .table-section {
   background: white;
   border-radius: 12px;
@@ -163,7 +160,7 @@ onMounted(() => loadDashboard());
   text-align: left;
   padding: 12px 16px;
   background-color: #f9fafb;
-  color: #6b7280; /* Màu xám chữ tiêu đề */
+  color: #6b7280;
   font-weight: 600;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -171,7 +168,7 @@ onMounted(() => loadDashboard());
 .data-table td {
   padding: 12px 16px;
   border-bottom: 1px solid #f3f4f6;
-  color: #1f2937; /* Chữ nội dung màu đen xám */
+  color: #1f2937;
   vertical-align: middle;
 }
 

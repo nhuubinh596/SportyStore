@@ -27,24 +27,18 @@ public class Product {
     @Column(name = "sale_price")
     private BigDecimal salePrice;
 
-    // Map đúng tên cột trong SQL (image_url)
     @Column(name = "image_url")
     private String imageUrl;
 
-    // --- QUAN TRỌNG: CẮT ĐỨT QUAN HỆ KHI GỬI JSON ---
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonIgnore // <--- Thêm dòng này: Không gửi cả cục Category về Frontend
+    @JsonIgnore
     private Category category;
 
-    // --- THÊM 2 HÀM NÀY ĐỂ FRONTEND VẪN LẤY ĐƯỢC TÊN DANH MỤC ---
-
-    // Lấy ID danh mục (cho trang Sửa/Thêm)
     public Long getCategoryId() {
         return category != null ? category.getId() : null;
     }
 
-    // Lấy Tên danh mục (cho trang Danh sách)
     public String getCategoryName() {
         return category != null ? category.getName() : "Chưa phân loại";
     }

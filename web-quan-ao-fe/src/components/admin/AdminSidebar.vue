@@ -29,7 +29,6 @@ function logout() {
 </script>
 
 <style scoped>
-/* Giữ nguyên CSS cũ của bạn */
 .sidebar { display: flex; flex-direction: column; height: 100%; justify-content: space-between; padding: 15px; }
 .nav-item { display: block; padding: 12px 16px; margin-bottom: 5px; color: #333; text-decoration: none; border-radius: 6px; font-weight: 500; transition: 0.2s; }
 .nav-item:hover { background: #eef2f5; }

@@ -24,7 +24,7 @@ public class Role {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    @JsonIgnore // <--- QUAN TRỌNG: Cắt đứt vòng lặp từ phía Role về User
+    @JsonIgnore
     private Set<UserAccount> users;
 
 }

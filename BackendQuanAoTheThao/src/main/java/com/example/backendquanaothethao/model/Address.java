@@ -23,7 +23,6 @@ public class Address {
     private String phone;
     private Boolean isDefault;
 
-    // Quan hệ n-1 với User
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserAccount user;

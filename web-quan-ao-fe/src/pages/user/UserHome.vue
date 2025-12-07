@@ -86,11 +86,10 @@ const loading = ref(false);
 const page = ref(0);
 const hasMore = ref(true);
 const keyword = ref('');
-const sortOption = ref('newest'); // Biến lưu trạng thái sắp xếp
-
+const sortOption = ref('newest'); 
 const formatPrice = (v) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v);
 
-// Hàm gọi API lấy dữ liệu
+// Hàm gọi API lấy dữ l
 async function loadProducts(isLoadMore = false) {
   if (!isLoadMore) {
     page.value = 0;
@@ -103,15 +102,14 @@ async function loadProducts(isLoadMore = false) {
     const res = await API.get(`/public/products`, {
       params: {
         page: page.value,
-        size: 10, // Lấy 10 cái mỗi lần
+        size: 10, 
         keyword: keyword.value,
-        sort: sortOption.value // Gửi tham số sắp xếp
+        sort: sortOption.value 
       }
     });
 
-    // Xử lý dữ liệu trả về (Spring Page)
     const newProducts = res.content || res.data || [];
-    const isLast = res.last; // Kiểm tra xem đã hết trang chưa
+    const isLast = res.last;
 
     if (newProducts.length < 10 || isLast) {
       hasMore.value = false;
@@ -130,10 +128,9 @@ async function loadProducts(isLoadMore = false) {
   }
 }
 
-// Sự kiện đổi kiểu sắp xếp
 function changeSort(option) {
   sortOption.value = option;
-  loadProducts(false); // Reset và tải lại từ đầu
+  loadProducts(false);
 }
 
 function loadMore() {
@@ -167,7 +164,6 @@ function addToCart(p) {
   alert(`Đã thêm "${p.name}" vào giỏ!`);
 }
 
-// Theo dõi URL để tìm kiếm
 watch(() => route.query.q, (newVal) => {
   keyword.value = newVal || '';
   loadProducts(false);
@@ -180,9 +176,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.home-page { width: 100%; color: #333; } /* Chữ đen toàn trang */
-
-/* Filter Bar */
+.home-page { width: 100%; color: #333; } 
 .filter-bar { 
   display: flex; justify-content: space-between; align-items: center; 
   margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; 
@@ -197,17 +191,14 @@ onMounted(() => {
   border-radius: 20px; cursor: pointer; font-size: 14px; color: #555; transition: 0.2s;
 }
 
-/* Nút đang chọn (Active) */
 .filter-left button.active { 
   background: #ff6b35; color: white; border-color: #ff6b35; font-weight: 600;
 }
 
 .filter-left button:hover:not(.active) { background: #f9f9f9; }
 
-/* Grid System */
 .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
 
-/* Product Card */
 .product-card { 
   background: white; border-radius: 8px; overflow: hidden; 
   box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: 0.3s; cursor: pointer; 
@@ -238,7 +229,6 @@ onMounted(() => {
 }
 .btn-quick-add:hover { background: #e65a2d; }
 
-/* Info */
 .card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; }
 .product-title { 
   font-size: 15px; font-weight: 600; margin: 0 0 10px; color: #222; 
@@ -254,7 +244,6 @@ onMounted(() => {
 
 .empty-state { text-align: center; padding: 50px; color: #888; font-style: italic; }
 
-/* Load More */
 .load-more-container { text-align: center; margin-top: 40px; margin-bottom: 20px; }
 .btn-load-more {
   background: white; border: 1px solid #ff6b35; color: #ff6b35;

@@ -26,7 +26,7 @@ public class Order {
     private LocalDateTime createdAt;
 
     @Column(name = "total_amount")
-    private BigDecimal totalAmount; // Phải là BigDecimal, không dùng Double
+    private BigDecimal totalAmount;
 
     @Column(name = "full_name")
     private String fullName;

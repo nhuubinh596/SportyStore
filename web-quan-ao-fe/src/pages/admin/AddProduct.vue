@@ -93,7 +93,6 @@ async function saveProduct() {
 </script>
 
 <style scoped>
-/* CSS giống các form trước, bạn giữ nguyên style cũ hoặc copy từ EditProduct */
 .add-product-page { display: flex; justify-content: center; padding: 20px; }
 .form-card { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 600px; }
 .input-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 5px; }

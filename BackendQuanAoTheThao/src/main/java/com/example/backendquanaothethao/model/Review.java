@@ -12,20 +12,18 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer rating; // 1 đến 5 sao
+    private Integer rating;
 
     @Column(columnDefinition = "NVARCHAR(MAX)")
-    private String comment; // Nội dung bình luận
+    private String comment;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // Quan hệ với User
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserAccount user;
 
-    // Quan hệ với Product
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;

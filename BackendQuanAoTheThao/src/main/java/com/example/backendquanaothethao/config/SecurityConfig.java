@@ -21,15 +21,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Cấu hình CORS (Cho phép Frontend gọi)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-                // 2. Tắt CSRF
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // 3. QUAN TRỌNG: MỞ FULL QUYỀN TRUY CẬP (để làm chức năng cho dễ)
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // <-- Cho phép tất cả, không chặn 403 nữa
+                        .anyRequest().permitAll()
                 );
 
         return http.build();
@@ -38,7 +33,6 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // Cho phép cổng Frontend 5173
         config.setAllowedOrigins(List.of("http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
@@ -51,7 +45,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Vẫn giữ NoOp để login bằng mật khẩu "123"
         return NoOpPasswordEncoder.getInstance();
     }
 }

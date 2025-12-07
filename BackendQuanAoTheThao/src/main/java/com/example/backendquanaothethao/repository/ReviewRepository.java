@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    // Lấy đánh giá theo sản phẩm (Mới nhất lên đầu)
     List<Review> findByProductIdOrderByCreatedAtDesc(Long productId);
 }

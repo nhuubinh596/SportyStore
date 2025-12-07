@@ -37,8 +37,8 @@ onMounted(() => {
 
 function handleLogout() {
   if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-    localStorage.clear(); // Xóa sạch token
-    router.push('/login'); // Đá về login
+    localStorage.clear(); 
+    router.push('/login'); 
   }
 }
 </script>
@@ -50,41 +50,41 @@ function handleLogout() {
   align-items: center;
   height: 100%;
   padding: 0 24px;
-  background-color: #ffffff; /* Nền trắng */
+  background-color: #ffffff; 
 }
 
 .brand {
   font-size: 20px;
   font-weight: 700;
-  color: #374151; /* Màu chữ đậm */
+  color: #374151; 
 }
 
 .highlight {
-  color: #ff6b35; /* Màu cam điểm nhấn */
+  color: #ff6b35; 
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 20px; /* Khoảng cách giữa tên và nút */
+  gap: 20px; 
 }
 
 .user-greeting {
   font-size: 14px;
-  color: #4b5563; /* Màu xám đậm */
+  color: #4b5563; 
 }
 
 .username {
   font-weight: 700;
-  color: #111827; /* Màu đen */
+  color: #111827; 
 }
 
 .btn-logout {
   padding: 6px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: #ef4444; /* Chữ đỏ */
-  background-color: #fef2f2; /* Nền đỏ nhạt */
+  color: #ef4444; 
+  background-color: #fef2f2; 
   border: 1px solid #fecaca;
   border-radius: 6px;
   cursor: pointer;

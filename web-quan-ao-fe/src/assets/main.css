@@ -1,4 +1,3 @@
-/* Dark Nike/Adidas theme + layout */
 :root{
   --bg:#0b0d10;
   --panel:#0f1113;
@@ -16,7 +15,6 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* header styles imported by Header.vue but keep base here */
 .site-header{
   background: #0f0f0f;
   padding:18px 28px;
@@ -48,27 +46,22 @@ body{
   color:#fff;
 }
 
-/* Buttons */
 .btn, button{cursor:pointer;border-radius:8px;border:0;padding:8px 12px}
 .btn-primary{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px}
 .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;color:#fff}
 
-/* forms and cards used across views */
 .input{padding:12px;border-radius:8px;border:1px solid #eee;width:100%;box-sizing:border-box}
 .form-row{margin-bottom:12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
 .card{background:#fff;color:#111;padding:14px;border-radius:10px;border:1px solid #eee}
 .card img{width:100%;height:160px;object-fit:cover;border-radius:6px}
 
-/* small text */
 .small{font-size:13px;color:#666}
 
-/* footer */
 .site-footer{
   text-align:center;color:#9aa0a6;padding:18px;margin-top:14px;
 }
 
-/* global theme - dark background with white panels */
 :root{--bg:#090a0b;--panel:#ffffff;--muted:#7a7f85;--accent:#ff5a1a}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#050607, #0b0d10);color:#e6eef6}

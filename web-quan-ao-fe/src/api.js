@@ -1,15 +1,13 @@
-// src/api.js
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/api", // giữ như bạn muốn
+  baseURL: "http://localhost:8080/api",
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: false, // set true nếu backend cần cookie-based auth
+  withCredentials: false, 
 });
 
-// gắn token tự động
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) {
@@ -22,7 +20,6 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    // optional: central error handling
     return Promise.reject(err);
   }
 );

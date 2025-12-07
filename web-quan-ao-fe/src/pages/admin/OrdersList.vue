@@ -125,7 +125,6 @@ async function load() {
 
 async function openDetail(order) {
   try {
-    // Gọi API lấy chi tiết để có full item
     const res = await API.get(`/admin/orders/${order.id}`);
     selectedOrder.value = res.data || res;
   } catch (e) {
@@ -157,7 +156,6 @@ onMounted(load);
 .page-container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); color: #333; }
 h2 { color: #333; font-weight: bold; margin-bottom: 20px; }
 
-/* Table */
 .custom-table { width: 100%; border-collapse: collapse; font-size: 14px; color: #333; }
 .custom-table th { background: #f8f9fa; padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #555; font-weight: 600; }
 .custom-table td { padding: 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
@@ -175,18 +173,17 @@ h2 { color: #333; font-weight: bold; margin-bottom: 20px; }
 .status-red { background: #f8d7da; color: #721c24; }
 .status-blue { background: #cce5ff; color: #004085; }
 
-/* MODAL STYLE (FIXED) */
 .modal-overlay { 
   position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
   background: rgba(0,0,0,0.5); 
   display: flex; align-items: center; justify-content: center; 
-  z-index: 9999; /* Cao hơn tất cả để không bị che */
+  z-index: 9999;
 }
 
 .modal-content { 
   background: white; width: 90%; max-width: 650px; 
   border-radius: 8px; overflow: hidden; 
-  color: #333; /* Chữ đen */
+  color: #333; 
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 

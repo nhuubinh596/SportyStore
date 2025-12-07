@@ -43,15 +43,13 @@ public class UserAccount {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore // <--- Thêm dòng này
+    @JsonIgnore
     private List<Order> orders;
 
-    // CẮT VÒNG LẶP 2: Quan hệ với Address (nếu có)
     @OneToMany(mappedBy = "user")
     @JsonIgnore // <--- Thêm dòng này
     private List<Address> addresses;
 
-    // Quan hệ với Role (Thường không gây crash nhưng nên cẩn thận)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
@@ -60,7 +58,6 @@ public class UserAccount {
     )
     private Set<Role> roles;
 
-    // handy getter for names (used by controller to return simple list)
     public List<String> getRoleNames() {
         return roles.stream()
                 .map(Role::getName)

@@ -112,7 +112,7 @@ async function handleLogin() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f4f6f8; /* Nền xám nhẹ */
+  background: #f4f6f8; 
 }
 
 .auth-box {
@@ -121,7 +121,7 @@ async function handleLogin() {
   max-width: 420px;
   padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08); /* Bóng đổ mềm */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
 }
 
 .auth-header { text-align: center; margin-bottom: 30px; }

@@ -92,7 +92,7 @@ import { useRoute } from 'vue-router';
 import API from '@/api';
 
 const route = useRoute();
-const order = ref(null); // Khởi tạo là null
+const order = ref(null); 
 const loading = ref(false);
 
 const formatPrice = (v) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v);
@@ -109,12 +109,10 @@ const getStatusColor = (s) => {
   return 'text-primary';
 };
 
-// Load dữ liệu
 async function loadOrder() {
   loading.value = true;
   try {
     const id = route.params.id;
-    // Gọi API admin để lấy chi tiết
     const res = await API.get(`/admin/orders/${id}`);
     order.value = res.data || res;
   } catch (e) {
@@ -125,12 +123,11 @@ async function loadOrder() {
   }
 }
 
-// Cập nhật trạng thái
 async function updateStatus() {
   try {
     await API.put(`/admin/orders/${order.value.id}/status`, { status: order.value.status });
     alert("Cập nhật thành công!");
-    loadOrder(); // Tải lại để cập nhật mới nhất
+    loadOrder(); 
   } catch (e) {
     alert("Lỗi cập nhật: " + e.message);
   }
@@ -163,12 +160,10 @@ h3 {
   font-size: 16px; font-weight: bold; color: #333; text-transform: uppercase;
 }
 
-/* Info Section */
 .info-row { margin-bottom: 12px; font-size: 14px; display: flex; justify-content: space-between; }
 .info-row strong { color: #555; }
 .badge-payment { background: #eef2f5; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; }
 
-/* Status Control */
 .status-control { display: flex; gap: 10px; margin-bottom: 15px; }
 .status-select { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ddd; outline: none; }
 .btn-update { 
@@ -178,7 +173,6 @@ h3 {
 .btn-update:hover { background: #e65a2d; }
 .current-status-text { font-size: 14px; color: #666; }
 
-/* Table */
 .item-table { width: 100%; border-collapse: collapse; }
 .item-table th { background: #f9f9f9; padding: 12px; text-align: left; color: #666; font-weight: 600; border-bottom: 2px solid #eee; }
 .item-table td { padding: 12px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
@@ -190,7 +184,6 @@ h3 {
 .label-total { font-size: 16px; font-weight: bold; color: #333; padding-top: 20px; }
 .total-price { color: #ff6b35; font-weight: bold; font-size: 20px; padding-top: 20px; }
 
-/* Status Colors */
 .text-warning { color: #d97706; font-weight: bold; }
 .text-success { color: #059669; font-weight: bold; }
 .text-danger { color: #dc2626; font-weight: bold; }

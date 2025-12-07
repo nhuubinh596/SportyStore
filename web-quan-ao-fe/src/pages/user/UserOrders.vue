@@ -132,11 +132,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Màu chữ đen chủ đạo */
 .orders-page { max-width: 1000px; margin: 30px auto; padding: 0 20px; color: #333; }
 .page-title { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #333; }
 
-/* Table */
 .order-table-wrapper { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; }
 .order-table { width: 100%; border-collapse: collapse; }
 .order-table th, .order-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; color: #333; }
@@ -146,14 +144,12 @@ onMounted(async () => {
 .btn-view { padding: 6px 12px; border: 1px solid #ff6b35; background: white; color: #ff6b35; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 13px; font-weight: 500;}
 .btn-view:hover { background: #ff6b35; color: white; }
 
-/* Status Badges */
 .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
 .status-orange { background: #fff3cd; color: #856404; }
 .status-green { background: #d4edda; color: #155724; }
 .status-red { background: #f8d7da; color: #721c24; }
 .status-blue { background: #cce5ff; color: #004085; }
 
-/* Modal (Popup) */
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
 .modal-content { background: white; width: 90%; max-width: 600px; border-radius: 8px; overflow: hidden; color: #333; }
 .modal-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; }

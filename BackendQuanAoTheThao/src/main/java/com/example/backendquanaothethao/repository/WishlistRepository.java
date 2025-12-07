@@ -6,9 +6,7 @@ import java.util.Optional;
 import java.util.List;
 
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
-    // Kiểm tra xem user đã like sản phẩm này chưa
     Optional<Wishlist> findByUserIdAndProductId(Long userId, Long productId);
 
-    // Lấy danh sách yêu thích của user (để hiển thị trang Wishlist sau này)
     List<Wishlist> findByUserId(Long userId);
 }

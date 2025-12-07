@@ -12,11 +12,9 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 1. Sửa tên biến thành 'qty' (để khớp với lệnh .setQty bên Controller)
     @Column(name = "qty")
     private int qty;
 
-    // 2. Sửa kiểu dữ liệu thành BigDecimal (để khớp với lệnh .setPrice bên Controller)
     private BigDecimal price;
 
     @ManyToOne

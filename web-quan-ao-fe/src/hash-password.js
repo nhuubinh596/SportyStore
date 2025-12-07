@@ -1,7 +1,3 @@
-// hash-passwords.js
-// Usage: npm i mssql bcrypt
-// node hash-passwords.js
-
 const mssql = require('mssql');
 const bcrypt = require('bcrypt');
 
@@ -20,7 +16,6 @@ const config = {
     for(const row of res.recordset){
       const id = row.id;
       const pwd = row.password || '';
-      // Skip already hashed entries (bcrypt starts with $2a$ or $2b$)
       if(pwd.startsWith('$2a$') || pwd.startsWith('$2b$') || pwd.startsWith('$2y$')) {
         console.log(`skip hashed id=${id}`);
         continue;

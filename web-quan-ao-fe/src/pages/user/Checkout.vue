@@ -115,7 +115,6 @@ const router = useRouter();
 const cart = ref([]);
 const loading = ref(false);
 
-// State cho Voucher
 const voucherCode = ref('');
 const discountAmount = ref(0);
 const voucherMessage = ref('');
@@ -146,22 +145,18 @@ onMounted(() => {
   } catch(e){}
 });
 
-// Tính toán tiền
 const totalAmount = computed(() => cart.value.reduce((sum, i) => sum + (i.price * i.qty), 0));
 const shippingFee = computed(() => totalAmount.value > 500000 ? 0 : 30000); 
 
-// Tổng cuối cùng = Tạm tính + Ship - Giảm giá
 const finalTotal = computed(() => {
   const total = totalAmount.value + shippingFee.value - discountAmount.value;
-  return total > 0 ? total : 0; // Không để tiền âm
+  return total > 0 ? total : 0; 
 });
 
-// --- XỬ LÝ VOUCHER (Giả lập) ---
 function applyVoucher() {
   voucherMessage.value = '';
   const code = voucherCode.value.toUpperCase().trim();
 
-  // Demo 2 mã giảm giá
   if (code === 'SPORTY50') {
     discountAmount.value = 50000;
     voucherMessage.value = "Áp dụng mã SPORTY50 thành công (-50k)";
@@ -174,7 +169,7 @@ function applyVoucher() {
         discountAmount.value = 0;
     }
   } else if (code === 'VIP') {
-    discountAmount.value = totalAmount.value * 0.1; // Giảm 10%
+    discountAmount.value = totalAmount.value * 0.1; 
     voucherMessage.value = "Áp dụng mã VIP thành công (-10%)";
   } else {
     discountAmount.value = 0;
@@ -200,7 +195,7 @@ async function submitOrder() {
       address: form.value.address,
       username: user.username || null,
       paymentMethod: form.value.paymentMethod,
-      totalAmount: finalTotal.value, // Gửi tổng tiền đã trừ voucher
+      totalAmount: finalTotal.value, 
       items: cart.value.map(item => ({
         productId: item.id,
         quantity: item.qty,
@@ -247,7 +242,6 @@ async function submitOrder() {
 .item-name { flex: 1; margin-right: 10px; color: #555; }
 .item-price { font-weight: 600; }
 
-/* Voucher Box */
 .voucher-box { display: flex; gap: 10px; margin: 15px 0 5px; }
 .voucher-box input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; outline: none; text-transform: uppercase; }
 .voucher-box button { padding: 8px 15px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;}

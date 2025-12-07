@@ -22,7 +22,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Cấu hình: Khi gọi đường dẫn /images/** thì vào folder uploads/ lấy ảnh
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:uploads/");
     }

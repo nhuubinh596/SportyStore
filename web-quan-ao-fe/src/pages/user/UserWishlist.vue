@@ -51,12 +51,10 @@ async function loadWishlist() {
 async function removeWishlist(p) {
   if(!confirm("Bỏ thích sản phẩm này?")) return;
   try {
-    // Gọi lại API toggle để bỏ like
     await API.post('/public/wishlist/toggle', {
       username: currentUser.username,
       productId: p.id
     });
-    // Xóa khỏi danh sách hiển thị luôn cho nhanh (khỏi load lại API)
     products.value = products.value.filter(item => item.id !== p.id);
   } catch(e) { alert("Lỗi: " + e.message); }
 }
@@ -84,7 +82,6 @@ onMounted(loadWishlist);
 .empty-state { text-align: center; padding: 50px; background: white; border-radius: 8px; color: #666; }
 .btn-shop { display: inline-block; margin-top: 15px; color: #ff6b35; font-weight: bold; text-decoration: none; border: 1px solid #ff6b35; padding: 8px 20px; border-radius: 4px;}
 
-/* Grid giống UserHome */
 .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
 .product-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: 0.3s; }
 .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }

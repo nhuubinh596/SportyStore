@@ -24,15 +24,13 @@ public class ProductController {
     private ProductRepository productRepo;
 
     @Autowired
-    private CategoryRepository categoryRepo; // <-- THÊM CÁI NÀY ĐỂ TÌM DANH MỤC
+    private CategoryRepository categoryRepo;
 
-    // 1. Lấy tất cả
     @GetMapping
     public List<Product> getAll() {
         return productRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
-    // 2. Lấy chi tiết
     @GetMapping("/{id}")
     public Product getOne(@PathVariable Long id) {
         return productRepo.findById(id).orElse(null);
@@ -42,24 +40,20 @@ public class ProductController {
     public Product create(
             @RequestParam("name") String name,
             @RequestParam("price") Double price,
-            @RequestParam(value = "salePrice", required = false) Double salePrice, // <--- THÊM
+            @RequestParam(value = "salePrice", required = false) Double salePrice,
             @RequestParam("description") String description,
             @RequestParam("categoryId") Long categoryId,
             @RequestParam(value = "image", required = false) MultipartFile imageFile
     ) throws IOException {
-
         Product p = new Product();
         p.setName(name);
         p.setPrice(BigDecimal.valueOf(price));
 
-        // Xử lý giá giảm
         if (salePrice != null && salePrice > 0) {
             p.setSalePrice(BigDecimal.valueOf(salePrice));
         }
 
         p.setDescription(description);
-
-        // ... (Đoạn tìm Category và Lưu ảnh giữ nguyên như cũ) ...
         Category cat = categoryRepo.findById(categoryId).orElse(null);
         p.setCategory(cat);
 
@@ -73,7 +67,6 @@ public class ProductController {
         return productRepo.save(p);
     }
 
-    // Hàm phụ trợ lưu file
     private String saveFile(MultipartFile file) throws IOException {
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path uploadPath = Paths.get("uploads");
@@ -89,7 +82,6 @@ public class ProductController {
         return fileName;
     }
 
-    // 4. Xóa
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         productRepo.deleteById(id);
@@ -104,27 +96,17 @@ public class ProductController {
             @RequestParam("categoryId") Long categoryId,
             @RequestParam(value = "image", required = false) MultipartFile imageFile // Ảnh là tùy chọn
     ) throws IOException {
-
-        // 1. Tìm sản phẩm cũ
         Product p = productRepo.findById(id).orElse(null);
-        if (p == null) return null; // Hoặc ném lỗi
-
-        // 2. Cập nhật thông tin cơ bản
+        if (p == null) return null;
         p.setName(name);
         p.setPrice(BigDecimal.valueOf(price));
         p.setDescription(description);
-
-        // 3. Cập nhật danh mục
         Category cat = categoryRepo.findById(categoryId).orElse(null);
         p.setCategory(cat);
-
-        // 4. Xử lý ảnh: Chỉ cập nhật nếu có file mới được gửi lên
         if (imageFile != null && !imageFile.isEmpty()) {
             String fileName = saveFile(imageFile);
             p.setImageUrl("http://localhost:8080/images/" + fileName);
         }
-        // Nếu không gửi ảnh mới thì giữ nguyên link ảnh cũ (p.getImageUrl())
-
         return productRepo.save(p);
     }
 }

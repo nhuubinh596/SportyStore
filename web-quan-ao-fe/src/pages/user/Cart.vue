@@ -151,7 +151,6 @@ td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
 .btn-checkout { width: 100%; padding: 15px; background: #ff6b35; color: white; border: none; border-radius: 4px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; }
 .btn-checkout:hover { background: #e65a2d; }
 
-/* Style cho nút "Chọn thêm sản phẩm khác" */
 .btn-continue-shopping {
   display: block;
   text-align: center;

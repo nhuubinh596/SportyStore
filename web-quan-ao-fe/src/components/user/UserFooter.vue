@@ -55,10 +55,10 @@
 
 <style scoped>
 .footer-wrapper {
-  background-color: #222; /* Nền tối */
-  color: #bbb; /* Chữ xám nhạt */
+  background-color: #222; 
+  color: #bbb; 
   padding-top: 50px;
-  margin-top: auto; /* Đẩy xuống đáy nếu nội dung ngắn */
+  margin-top: auto; 
 }
 
 .footer-content {

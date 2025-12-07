@@ -30,7 +30,6 @@ public class OrderController {
         return orderRepository.findById(id).orElse(null);
     }
 
-    // 3. Cập nhật trạng thái đơn hàng
     @PutMapping("/{id}/status")
     public Order updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
         Order order = orderRepository.findById(id).orElse(null);

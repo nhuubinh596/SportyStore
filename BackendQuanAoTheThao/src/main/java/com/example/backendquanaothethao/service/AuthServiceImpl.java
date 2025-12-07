@@ -22,16 +22,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserAccount authenticate(String username, String rawPassword) {
-        Optional<UserAccount> opt = userRepo.findByUsername(username); // adjust method if different
+        Optional<UserAccount> opt = userRepo.findByUsername(username);
         if (opt.isEmpty()) return null;
         UserAccount u = opt.get();
         String stored = u.getPassword();
-        // if stored is hashed with bcrypt
         if (stored != null && stored.startsWith("$2a$")) {
             if (passwordEncoder.matches(rawPassword, stored)) return u;
             return null;
         }
-        // fallback: plain text (not recommended)
         if (rawPassword.equals(stored)) return u;
         return null;
     }

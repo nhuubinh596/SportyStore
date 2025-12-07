@@ -97,7 +97,6 @@ const loading = ref(false);
 const qty = ref(1);
 const currentUser = ref(null);
 
-// Review & Wishlist State
 const reviews = ref([]);
 const isLiked = ref(false);
 const myRating = ref(5);
@@ -112,23 +111,17 @@ const formatDate = (d) => new Date(d).toLocaleDateString('vi-VN');
 async function loadData() {
   loading.value = true;
   try {
-    // 1. Load Product
     const res = await API.get(`/public/products/${route.params.id}`);
     product.value = res.data || res;
     
-    // 2. Load Reviews
     const resRev = await API.get(`/public/reviews/${route.params.id}`);
     reviews.value = resRev.data || resRev;
 
-    // 3. Check Wishlist (Nếu đã login)
-    // (Phần này làm đơn giản: FE tự quản lý trạng thái click, chưa cần gọi API check lúc load để code đỡ phức tạp)
   } catch (e) { console.error(e); } 
   finally { loading.value = false; }
 }
 
-// Hàm thả tim (Đã Fix lỗi)
 async function toggleWishlist() {
-  // 1. Kiểm tra đăng nhập
   if (!currentUser.value) {
     if(confirm("Bạn cần đăng nhập để lưu sản phẩm yêu thích. Đi đến trang đăng nhập?")) {
       router.push('/login');
@@ -137,33 +130,23 @@ async function toggleWishlist() {
   }
 
   try {
-    // 2. Gọi API
     const res = await API.post('/public/wishlist/toggle', {
       username: currentUser.value.username,
       productId: product.value.id
     });
-
-    // 3. FIX LỖI QUAN TRỌNG: Xử lý response linh hoạt
-    // Nếu API trả về full response (có .data) thì lấy .data
-    // Nếu API đã lọc sẵn dữ liệu thì lấy chính nó
     const data = res.data || res; 
 
-    // 4. Cập nhật trạng thái
     if (data) {
-      isLiked.value = data.liked; // Cập nhật trái tim (Đỏ/Trắng)
+      isLiked.value = data.liked; 
       
-      // Dùng Toast hoặc Alert nhỏ thôi cho đỡ phiền
       console.log(data.message); 
     }
 
   } catch(e) {
     console.error("Lỗi Wishlist:", e);
-    // Chỉ hiện alert nếu lỗi thực sự nghiêm trọng
-    // alert("Lỗi: " + (e.response?.data || e.message));
   }
 }
 
-// Gửi đánh giá
 async function submitReview() {
   if (!myComment.value) return alert("Vui lòng viết nội dung!");
   try {
@@ -175,11 +158,10 @@ async function submitReview() {
     });
     alert("Cảm ơn bạn đã đánh giá!");
     myComment.value = '';
-    loadData(); // Reload để thấy review mới
+    loadData(); 
   } catch(e) { alert("Lỗi: " + e.message); }
 }
 
-// Cart functions (Giữ nguyên)
 function addToCart() {
   let cart = JSON.parse(localStorage.getItem('cart') || '[]');
   const item = product.value;
@@ -213,7 +195,6 @@ onMounted(() => {
 .main-image img { width: 100%; display: block; }
 .sale-tag { position: absolute; top: 10px; left: 10px; background: #ffeb3b; color: #d32f2f; padding: 5px 10px; font-weight: bold; border-radius: 4px; }
 
-/* Title Row */
 .title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
 .product-title { font-size: 24px; margin: 0; flex: 1; }
 .btn-wishlist { border: 1px solid #ddd; background: white; padding: 5px 10px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 14px; color: #555; }
@@ -237,7 +218,6 @@ onMounted(() => {
 .btn-add-cart { background: #fff0e6; color: #ff6b35; border: 1px solid #ff6b35; padding: 12px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; }
 .btn-buy-now { background: #ff6b35; color: white; border: none; padding: 12px 40px; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
-/* REVIEW SECTION */
 .review-section { margin-top: 30px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 .review-form { margin-bottom: 30px; background: #f9f9f9; padding: 20px; border-radius: 8px; }
 .star-rating { margin-bottom: 10px; }

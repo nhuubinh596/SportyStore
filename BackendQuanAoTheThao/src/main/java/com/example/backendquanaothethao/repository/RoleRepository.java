@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    // Tìm role theo tên (ví dụ để tìm "ROLE_USER" cho chắc ăn)
     Optional<Role> findByName(String name);
 }

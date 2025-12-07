@@ -1,4 +1,3 @@
-// src/main/java/com/example/backendquanaothethao/service/impl/TokenServiceImpl.java
 package com.example.backendquanaothethao.service;
 
 import com.example.backendquanaothethao.model.UserAccount;
@@ -11,7 +10,6 @@ import java.util.UUID;
 public class TokenServiceImpl implements TokenService {
     @Override
     public String createTokenFor(UserAccount user) {
-        // simple token for demo — replace with JWT in production
         return UUID.randomUUID().toString();
     }
 }

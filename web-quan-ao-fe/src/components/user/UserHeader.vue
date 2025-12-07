@@ -32,16 +32,14 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router'; // Import router để chuyển trang
+import { useRouter } from 'vue-router'; 
 
 const router = useRouter();
 const currentUser = ref(null);
 const cartCount = ref(0);
-const keyword = ref(''); // Biến lưu từ khóa
+const keyword = ref('');
 
-// Xử lý tìm kiếm
 function handleSearch() {
-  // Đẩy từ khóa lên URL (Query Param) -> Trang chủ sẽ bắt lấy và lọc
   router.push({ path: '/user', query: { q: keyword.value } });
 }
 
@@ -77,7 +75,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* CSS Giữ nguyên như cũ */
 .user-header { height: 70px; background: white; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 9999; }
 .brand { font-size: 24px; font-weight: bold; color: #ff6b35; text-decoration: none; margin-right: 20px;}
 .header-left { display: flex; align-items: center; gap: 20px; flex: 1;}
@@ -94,11 +91,11 @@ onUnmounted(() => {
 .user-info { 
   font-size: 14px; 
   display: flex; gap: 10px; align-items: center; 
-  color: #333 !important; /* <--- Thêm !important để ép màu đen */
+  color: #333 !important; 
 }
 
 .username {
   font-weight: 700;
-  color: #000 !important; /* Tên user đen tuyền */
+  color: #000 !important; 
 }
 </style>

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/public") // Đường dẫn công khai
+@RequestMapping("/api/public")
 @CrossOrigin(origins = "http://localhost:5173")
 public class PublicController {
 
@@ -35,28 +35,20 @@ public class PublicController {
     @Autowired
     private OrderRepository orderRepository;
 
-    // API lấy danh sách sản phẩm (Có Phân trang + Tìm kiếm + Sắp xếp)
     @GetMapping("/products")
     public Page<Product> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size,
             @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(defaultValue = "newest") String sort // <--- Tham số quyết định sắp xếp
+            @RequestParam(defaultValue = "newest") String sort
     ) {
-        // 1. Mặc định: Sắp xếp theo ID giảm dần (Mới nhất lên đầu)
         Sort sorting = Sort.by(Sort.Direction.DESC, "id");
-
-        // 2. Kiểm tra tham số gửi lên để đổi kiểu sắp xếp
         if ("price_asc".equals(sort)) {
-            sorting = Sort.by(Sort.Direction.ASC, "price"); // Giá tăng dần
+            sorting = Sort.by(Sort.Direction.ASC, "price");
         } else if ("price_desc".equals(sort)) {
-            sorting = Sort.by(Sort.Direction.DESC, "price"); // Giá giảm dần
+            sorting = Sort.by(Sort.Direction.DESC, "price");
         }
-
-        // 3. Tạo trang dữ liệu với cấu hình sắp xếp đã chọn
         Pageable pageable = PageRequest.of(page, size, sorting);
-
-        // 4. Gọi Database
         if (keyword == null || keyword.trim().isEmpty()) {
             return productRepo.findAll(pageable);
         } else {
@@ -75,20 +67,14 @@ public class PublicController {
             Order order = new Order();
             order.setCreatedAt(LocalDateTime.now());
             order.setStatus("PENDING");
-
-            // --- THÊM ĐOẠN NÀY ĐỂ LƯU THÔNG TIN GIAO HÀNG ---
             order.setFullName(req.getFullName());
             order.setPhone(req.getPhone());
             order.setAddress(req.getAddress());
             order.setPaymentMethod("COD");
-
-            // Gán User nếu có
             if (req.getUsername() != null) {
                 UserAccount user = userRepository.findByUsername(req.getUsername()).orElse(null);
                 order.setUser(user);
             }
-
-            // 2. Xử lý chi tiết đơn hàng (Items)
             double total = 0;
             ArrayList<OrderItem> items = new ArrayList<>();
 
@@ -99,19 +85,13 @@ public class PublicController {
                     item.setProduct(product);
                     item.setOrder(order);
                     item.setQty(itemReq.getQuantity());
-                    // Giá lấy từ request (đã tính giảm giá) hoặc lấy từ DB đều được
-                    // Ở đây lấy từ DB cho an toàn hoặc request nếu tin tưởng FE
                     item.setPrice(BigDecimal.valueOf(itemReq.getPrice()));
-
                     items.add(item);
                     total += itemReq.getPrice() * itemReq.getQuantity();
                 }
             }
-
             order.setItems(items);
             order.setTotalAmount(BigDecimal.valueOf(total));
-
-            // 3. Lưu vào DB
             orderRepository.save(order);
 
             return ResponseEntity.ok(Map.of("message", "Đặt hàng thành công!", "orderId", order.getId()));
@@ -126,5 +106,4 @@ public class PublicController {
     public List<Order> getMyOrders(@RequestParam("username") String username) {
         return orderRepository.findByUser_UsernameOrderByCreatedAtAsc(username);
     }
-    // Tìm kiếm sản phẩm (Làm sau nếu cần)
 }

@@ -64,7 +64,6 @@ const users = ref([]);
 const loading = ref(false);
 const currentUser = ref(null);
 
-// Lấy thông tin admin đang đăng nhập để tránh xóa nhầm chính mình
 try {
   currentUser.value = JSON.parse(localStorage.getItem('currentUser'));
 } catch(e){}
@@ -81,9 +80,7 @@ async function loadData() {
   }
 }
 
-// Xử lý hiển thị Role
 function formatRole(user) {
-  // Backend trả về list roles (object hoặc string)
   const roles = user.roles || [];
   const roleNames = roles.map(r => r.name || r);
   
@@ -127,7 +124,6 @@ h2 { color: #333; font-weight: bold; margin: 0; }
 .user-username { font-size: 12px; color: #888; }
 .contact-info { font-size: 13px; color: #555; margin-bottom: 2px; }
 
-/* Badge Role */
 .badge-admin { background: #ffebee; color: #c62828; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; border: 1px solid #ffcdd2; }
 .badge-user { background: #e3f2fd; color: #1565c0; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; border: 1px solid #bbdefb; }
 

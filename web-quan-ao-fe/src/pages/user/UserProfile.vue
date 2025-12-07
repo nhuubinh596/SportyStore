@@ -37,7 +37,6 @@ export default {
 
     onMounted(() => {
       try {
-        // Lấy thông tin từ localStorage (đã lưu lúc Login)
         const raw = localStorage.getItem("currentUser");
         if (raw) {
           user.value = JSON.parse(raw);

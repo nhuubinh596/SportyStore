@@ -32,8 +32,8 @@ function toggleSidebar() {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f3f4f6; /* Nền tổng thể màu xám sáng */
-  overflow: hidden; /* Chặn scroll của cả trang */
+  background-color: #f3f4f6;
+  overflow: hidden;
 }
 
 .layout-header {
@@ -66,7 +66,7 @@ function toggleSidebar() {
 .layout-content {
   flex: 1;
   padding: 24px;
-  overflow-y: auto; /* Chỉ scroll phần nội dung */
-  color: #1f2937; /* Mặc định chữ màu đen xám */
+  overflow-y: auto; 
+  color: #1f2937; 
 }
 </style>

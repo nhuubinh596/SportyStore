@@ -20,15 +20,11 @@ public class InteractionController {
     @Autowired private UserRepository userRepo;
     @Autowired private ProductRepository productRepo;
 
-    // --- REVIEW ---
-
-    // 1. Lấy danh sách đánh giá của 1 sản phẩm
     @GetMapping("/reviews/{productId}")
     public List<Review> getReviews(@PathVariable Long productId) {
         return reviewRepo.findByProductIdOrderByCreatedAtDesc(productId);
     }
 
-    // 2. Thêm đánh giá mới
     @PostMapping("/reviews")
     public ResponseEntity<?> addReview(@RequestBody Map<String, Object> payload) {
         try {
@@ -57,22 +53,16 @@ public class InteractionController {
         }
     }
 
-    // --- WISHLIST ---
-
-    // 4. Xem danh sách yêu thích của User
     @GetMapping("/wishlist")
     public List<Product> getMyWishlist(@RequestParam("username") String username) {
         UserAccount user = userRepo.findByUsername(username).orElse(null);
-        if (user == null) return List.of(); // Trả về list rỗng nếu ko tìm thấy user
-
-        // Lấy list Wishlist -> Chuyển đổi (Map) thành list Product
+        if (user == null) return List.of();
         return wishlistRepo.findByUserId(user.getId())
                 .stream()
                 .map(Wishlist::getProduct)
                 .toList();
     }
 
-    // 3. Thả tim / Bỏ tim (Toggle)
     @PostMapping("/wishlist/toggle")
     public ResponseEntity<?> toggleWishlist(@RequestBody Map<String, Object> payload) {
         String username = (String) payload.get("username");
@@ -80,12 +70,10 @@ public class InteractionController {
 
         UserAccount user = userRepo.findByUsername(username).orElse(null);
         if (user == null) return ResponseEntity.badRequest().body("Chưa đăng nhập");
-
-        // Kiểm tra xem đã like chưa
         var exist = wishlistRepo.findByUserIdAndProductId(user.getId(), productId);
 
         if (exist.isPresent()) {
-            wishlistRepo.delete(exist.get()); // Đã like thì xóa (Unlike)
+            wishlistRepo.delete(exist.get());
             return ResponseEntity.ok(Map.of("liked", false, "message", "Đã bỏ yêu thích"));
         } else {
             Wishlist w = new Wishlist();

@@ -20,6 +20,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    @JsonIgnore // <--- THÊM DÒNG NÀY ĐỂ CHẶN LỖI 500
+    @JsonIgnore
     private List<Product> products;
 }
