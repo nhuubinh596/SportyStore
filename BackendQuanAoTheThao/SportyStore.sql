@@ -1,13 +1,9 @@
-CREATE DATABASE sportystore COLLATE Vietnamese_CI_AS;
+﻿CREATE DATABASE sportystore COLLATE Vietnamese_CI_AS;
 GO
 
 USE sportystore;
 GO
 
--- =============================================
--- 1. X�A B?NG C? (Theo th? t? Con tr??c -> Cha sau)
--- =============================================
--- D�ng l?nh DROP IF EXISTS (??n gi?n, kh�ng b�o l?i n?u b?ng ch?a c�)
 DROP TABLE IF EXISTS order_item;
 DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS wishlist;
@@ -21,11 +17,6 @@ DROP TABLE IF EXISTS user_account;
 DROP TABLE IF EXISTS address;
 GO
 
--- =============================================
--- 2. T?O 10 B?NG C? B?N
--- =============================================
-
--- B?NG 1: USER (T�i kho?n)
 CREATE TABLE user_account (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     username NVARCHAR(100) NOT NULL UNIQUE,
@@ -36,13 +27,11 @@ CREATE TABLE user_account (
     created_at DATETIME2 DEFAULT GETDATE()
 );
 
--- B?NG 2: ROLE (Quy?n)
 CREATE TABLE role (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(50) NOT NULL UNIQUE
 );
 
--- B?NG 3: USER_ROLE (B?ng n?i User-Role)
 CREATE TABLE user_role (
     user_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL,
@@ -51,13 +40,11 @@ CREATE TABLE user_role (
     FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
--- B?NG 4: CATEGORY (Danh m?c)
 CREATE TABLE category (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE
 );
 
--- B?NG 5: PRODUCT (S?n ph?m)
 CREATE TABLE product (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(255) NOT NULL,
@@ -70,7 +57,6 @@ CREATE TABLE product (
     FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE SET NULL
 );
 
--- B?NG 6: ORDERS (??n h�ng)
 CREATE TABLE orders (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     user_id BIGINT,
@@ -84,7 +70,6 @@ CREATE TABLE orders (
     FOREIGN KEY (user_id) REFERENCES user_account(id)
 );
 
--- B?NG 8: VOUCHER (M� gi?m gi�)
 CREATE TABLE voucher (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     code VARCHAR(50) NOT NULL UNIQUE,
@@ -92,7 +77,6 @@ CREATE TABLE voucher (
     expiration_date DATETIME2
 );
 
--- B?NG 9: REVIEW (?�nh gi�)
 CREATE TABLE review (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -107,7 +91,7 @@ CREATE TABLE review (
 CREATE TABLE order_item (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     order_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL, -- B?t bu?c t�n l� product_id
+    product_id BIGINT NOT NULL, -- Bắt buộc tên là product_id
     qty INT NOT NULL DEFAULT 1,
     price DECIMAL(12,2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
@@ -117,72 +101,58 @@ CREATE TABLE order_item (
 CREATE TABLE wishlist (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     user_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL, -- B?t bu?c t�n l� product_id
+    product_id BIGINT NOT NULL, -- Bắt buộc tên là product_id
     created_at DATETIME2 DEFAULT GETDATE(),
-    UNIQUE(user_id, product_id), -- Ch?n tr�ng l?p (1 ng??i ko like 2 l?n 1 m�n)
+    UNIQUE(user_id, product_id), -- Chặn trùng lặp (1 người ko like 2 lần 1 món)
     FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 
--- =============================================
--- 3. CH�N D? LI?U (INSERT TH? C�NG)
--- =============================================
-
--- ROLE
 INSERT INTO role (name) VALUES ('ROLE_ADMIN'), ('ROLE_USER');
 
--- USER (Pass: 123)
 INSERT INTO user_account (username, password, full_name, email, phone) VALUES 
-('admin', '123', N'Qu?n Tr? Vi�n', 'admin@sporty.com', '0909111222'),
-('user1', '123', N'Nguy?n V?n A', 'user1@gmail.com', '0912333444'),
-('user2', '123', N'Tr?n Th? B', 'user2@gmail.com', '0912555666');
+('admin', '123', N'Quản Trị Viên', 'admin@sporty.com', '0909111222'),
+('user1', '123', N'Nguyễn Văn A', 'user1@gmail.com', '0912333444'),
+('user2', '123', N'Trần Thị B', 'user2@gmail.com', '0912555666');
 
--- USER_ROLE
 INSERT INTO user_role (user_id, role_id) VALUES (1, 1), (1, 2), (2, 2), (3, 2);
 
--- CATEGORY
 INSERT INTO category (name) VALUES 
-(N'�o thun'), (N'Qu?n short'), (N'Gi�y th? thao'), (N'Ph? ki?n'), (N'?? t?p Gym');
+(N'Áo thun'), (N'Quần short'), (N'Giày thể thao'), (N'Phụ kiện'), (N'Đồ tập Gym');
 
--- PRODUCT (Kho?ng 15 s?n ph?m m?u ??i di?n)
 INSERT INTO product (name, price, sale_price, category_id, image_url, description) VALUES
-(N'�o Thun DryFit Cool', 299000, 250000, 1, 'https://placehold.co/300x300?text=Ao+Thun', N'Tho�ng m�t.'),
-(N'�o Polo Th? Thao', 450000, NULL, 1, 'https://placehold.co/300x300?text=Polo', N'L?ch s?.'),
-(N'�o Tanktop Gym', 150000, 120000, 1, 'https://placehold.co/300x300?text=Tanktop', N'Khoe c? b?p.'),
-(N'Qu?n Short 2 L?p', 220000, NULL, 2, 'https://placehold.co/300x300?text=Short', N'C� l?p l�t.'),
-(N'Qu?n Jogger Thun', 320000, 280000, 2, 'https://placehold.co/300x300?text=Jogger', N'N?ng ??ng.'),
-(N'Gi�y Nike Pegasus', 3500000, 2990000, 3, 'https://placehold.co/300x300?text=Nike', N'Ch?y b?.'),
-(N'Gi�y Adidas Ultra', 4200000, NULL, 3, 'https://placehold.co/300x300?text=Das', N'�m �i.'),
-(N'Gi�y Bitis Hunter', 890000, 790000, 3, 'https://placehold.co/300x300?text=Bitis', N'H�ng Vi?t.'),
-(N'B�nh N??c 1L', 90000, NULL, 4, 'https://placehold.co/300x300?text=Binh', N'Nh?a an to�n.'),
-(N'G?ng Tay Th? M�n', 300000, NULL, 4, 'https://placehold.co/300x300?text=Gang', N'B?t d�nh.'),
-(N'T�i Tr?ng Gym', 350000, 299000, 4, 'https://placehold.co/300x300?text=Tui', N'??ng ??.'),
-(N'Th?m Yoga', 199000, NULL, 5, 'https://placehold.co/300x300?text=Tham', N'Ch?ng tr??t.'),
-(N'D�y Nh?y', 120000, NULL, 5, 'https://placehold.co/300x300?text=Day', N'T?c ?? cao.'),
-(N'?ai L?ng C?ng', 450000, 400000, 5, 'https://placehold.co/300x300?text=Dai', N'H? tr? l?ng.'),
-(N'�o Kho�c Gi�', 550000, NULL, 1, 'https://placehold.co/300x300?text=Khoac', N'Ch?ng n??c.');
+(N'Áo Thun DryFit Cool', 299000, 250000, 1, 'https://placehold.co/300x300?text=Ao+Thun', N'Thoáng mát.'),
+(N'Áo Polo Thể Thao', 450000, NULL, 1, 'https://placehold.co/300x300?text=Polo', N'Lịch sự.'),
+(N'Áo Tanktop Gym', 150000, 120000, 1, 'https://placehold.co/300x300?text=Tanktop', N'Khoe cơ bắp.'),
+(N'Quần Short 2 Lớp', 220000, NULL, 2, 'https://placehold.co/300x300?text=Short', N'Có lớp lót.'),
+(N'Quần Jogger Thun', 320000, 280000, 2, 'https://placehold.co/300x300?text=Jogger', N'Năng động.'),
+(N'Giày Nike Pegasus', 3500000, 2990000, 3, 'https://placehold.co/300x300?text=Nike', N'Chạy bộ.'),
+(N'Giày Adidas Ultra', 4200000, NULL, 3, 'https://placehold.co/300x300?text=Das', N'Êm ái.'),
+(N'Giày Bitis Hunter', 890000, 790000, 3, 'https://placehold.co/300x300?text=Bitis', N'Hàng Việt.'),
+(N'Bình Nước 1L', 90000, NULL, 4, 'https://placehold.co/300x300?text=Binh', N'Nhựa an toàn.'),
+(N'Găng Tay Thủ Môn', 300000, NULL, 4, 'https://placehold.co/300x300?text=Gang', N'Bắt dính.'),
+(N'Túi Trống Gym', 350000, 299000, 4, 'https://placehold.co/300x300?text=Tui', N'Đựng đồ.'),
+(N'Thảm Yoga', 199000, NULL, 5, 'https://placehold.co/300x300?text=Tham', N'Chống trượt.'),
+(N'Dây Nhảy', 120000, NULL, 5, 'https://placehold.co/300x300?text=Day', N'Tốc độ cao.'),
+(N'Đai Lưng Cứng', 450000, 400000, 5, 'https://placehold.co/300x300?text=Dai', N'Hỗ trợ lưng.'),
+(N'Áo Khoác Gió', 550000, NULL, 1, 'https://placehold.co/300x300?text=Khoac', N'Chống nước.');
 
--- ORDERS
 INSERT INTO orders (user_id, status, total_amount, full_name, phone, address, payment_method, created_at) VALUES
-(2, 'PENDING', 299000, N'Nguy?n V?n A', '0912333444', N'H� N?i', 'COD', GETDATE()),
-(3, 'COMPLETED', 3500000, N'Tr?n Th? B', '0912555666', N'?� N?ng', 'BANK', GETDATE());
+(2, 'PENDING', 299000, N'Nguyễn Văn A', '0912333444', N'Hà Nội', 'COD', GETDATE()),
+(3, 'COMPLETED', 3500000, N'Trần Thị B', '0912555666', N'Đà Nẵng', 'BANK', GETDATE());
 
--- ORDER_ITEM
 INSERT INTO order_item (order_id, product_id, qty, price) VALUES
 (1, 1, 1, 299000),
 (2, 6, 1, 3500000);
 
--- VOUCHER
 INSERT INTO voucher (code, discount_amount, expiration_date) VALUES 
 ('SPORTY50', 50000, '2025-12-31'),
 ('VIP', 100000, '2025-12-31');
 
--- REVIEW
 INSERT INTO review (user_id, product_id, rating, comment) VALUES
-(2, 1, 5, N'�o m?c m�t l?m!'),
-(3, 6, 4, N'Gi�y �m nh?ng giao h?i l�u.');
+(2, 1, 5, N'Áo mặc mát lắm!'),
+(3, 6, 4, N'Giày êm nhưng giao hơi lâu.');
 
--- WISHLIST
 INSERT INTO wishlist (user_id, product_id) VALUES (2, 6), (2, 7);
 
 GO
